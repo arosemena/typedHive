@@ -1,7 +1,7 @@
 import { getCreeps, getSpawns } from './helpers/game'
 import { getRole, work } from './work'
 import { createCensus } from './helpers/census'
-import { spawnCreep } from './helpers/creep'
+import { canSpawnCreep, spawnCreep } from './helpers/creep'
 import { farmerRole } from './roles/farmer.role'
 import { torchBringerRole } from './roles/torch-bringer.role'
 
@@ -17,11 +17,11 @@ const loop = () => {
 
   // Spawn any missing creeps
   const spawn = getSpawns()[0]
-  if (census.farmer < 2 && !spawn.spawning) {
+  if (census.farmer < 2 && canSpawnCreep(spawn, farmerRole)) {
     console.log('only found ', census.farmer, ' farmers, spawning more')
     spawnCreep(spawn, farmerRole)
   }
-  if (census.torchBringer < 1 && !spawn.spawning) {
+  if (census.torchBringer < 1 && canSpawnCreep(spawn, torchBringerRole)) {
     console.log('only found ', census.torchBringer, ' torchBringer, spawning more')
     spawnCreep(spawn, torchBringerRole)
   }

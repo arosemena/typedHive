@@ -1,9 +1,10 @@
-import { Creep } from '../types/Creep'
+import { Creep, CreepPart } from '../types/Creep'
 import { Source } from '../types/Source'
 import { ERR_NOT_IN_RANGE } from './statuses'
 import { Spawn } from '../types/Spawn'
 import { Role } from '../types/Role'
 import { Structure } from '../types/Structure'
+import { code } from '../constants'
 
 export const harvestSource = (creep: Creep, source: Source) => {
   const harvest = creep.harvest(source)
@@ -23,4 +24,18 @@ export const spawnCreep = (spawn: Spawn, role: Role) => {
     role.name + ' ' + (new Date().valueOf()),
     { memory: { role: role.name } },
   )
+}
+
+export const creepCost = (parts: CreepPart[]) => {
+  let cost = 0
+  for (const part of parts) cost += code.BODYPART_COST[part]
+  return cost
+}
+
+export const canSpawnCreep = (spawn: Spawn, role: Role): boolean => {
+  // Check if it's not spawning something already
+  if (spawn.spawning) return false
+  // Check part requirements
+  if (spawn.store.energy < creepCost(role.parts)) return false
+  return true
 }

@@ -23,5 +23,4 @@ const req = request({
   },
 })
 
-req.write(JSON.stringify({ branch: 'typedHive', modules }))
-req.end(console.log)
+req.end(JSON.stringify({ branch: 'typedHive', modules }))
