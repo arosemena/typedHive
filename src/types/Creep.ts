@@ -2,6 +2,7 @@ import { Store } from './Store'
 import { Source } from './Source'
 import { RoomObject } from './Room'
 import { Structure } from './Structure'
+import { Controller } from './Controller'
 
 
 export type CreepPart =
@@ -12,6 +13,7 @@ export type Creep = {
   store: Store
   memory: Record<string, any>
   transfer: (target: Creep | Structure, resource: 'energy') => number
+  upgradeController: (target: Controller) => number
   harvest: (target: Source) => number
   moveTo: (target: RoomObject | Creep) => number
   say: (what: string) => void

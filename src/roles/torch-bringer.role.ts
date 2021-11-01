@@ -1,6 +1,6 @@
 import { Role } from '../types/Role'
 import { Creep } from '../types/Creep'
-import { harvestSource, transferEnergy } from '../helpers/creep'
+import { harvestSource, upgradeController } from '../helpers/creep'
 import { findSources } from '../helpers/find'
 import { getSpawns } from '../helpers/game'
 
@@ -12,9 +12,18 @@ export const torchBringerRole: Role = {
     const spawn = getSpawns()[0]
     const sources = findSources(spawn.room)
     const controller = spawn.room.controller
+    const isFull = creep.store.getFreeCapacity() === 0
+    let state = creep.memory.state || 'collect'
 
-    creep.store.getFreeCapacity() > 0
-      ? harvestSource(creep, sources[0])
-      : transferEnergy(creep, controller)
+    // Check if state can change
+    if (state === 'upgrade' && creep.store.energy === 0) state = 'collect'
+    if (state === 'collect' && isFull) state = 'upgrade'
+
+    // Apply state
+    if (state === 'collect') harvestSource(creep, sources[0])
+    if (state === 'upgrade') upgradeController(creep, controller)
+
+    // Persist state
+    creep.memory.state = state
   },
 }
