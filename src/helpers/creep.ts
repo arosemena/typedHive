@@ -1,6 +1,6 @@
 import { Creep, CreepPart } from '../types/Creep'
 import { Source } from '../types/Source'
-import { ERR_NOT_IN_RANGE } from './statuses'
+import { ERR_FULL, ERR_NOT_IN_RANGE } from './statuses'
 import { Spawn } from '../types/Spawn'
 import { Role } from '../types/Role'
 import { Structure } from '../types/Structure'
@@ -22,6 +22,7 @@ export const upgradeController = (creep: Creep, target: Controller) => {
 export const transferEnergy = (creep: Creep, target: Creep | Structure) => {
   const transfer = creep.transfer(target, 'energy')
   if (transfer === ERR_NOT_IN_RANGE) return creep.moveTo(target)
+  if (transfer === ERR_FULL) return creep.say('💤')
   creep.say('🤲')
 }
 
